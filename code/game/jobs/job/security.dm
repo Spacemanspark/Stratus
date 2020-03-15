@@ -1,6 +1,6 @@
 /datum/job/hos
 	title = "Head of Security"
-	flag = COMMANDER
+	flag = HOS
 	department_flag = ENGSEC
 	total_positions = 1
 	spawn_positions = 1
@@ -17,6 +17,8 @@
 			            access_research, access_engine, access_mining, access_medical, access_construction, access_mailsorting,
 			            access_heads, access_hos, access_RC_announce, access_keycard_auth, access_gateway, access_pilot, access_weapons)
 	minimal_player_age = 21
+	exp_requirements = 600
+	exp_type = EXP_TYPE_CREW
 
 	equip(var/mob/living/carbon/human/H)
 		if(!H)	return 0
@@ -57,6 +59,8 @@
 	access = list(access_security, access_sec_doors, access_brig, access_armory, access_court, access_maint_tunnels, access_morgue, access_weapons)
 	minimal_access = list(access_security, access_sec_doors, access_brig, access_armory, access_court, access_maint_tunnels, access_weapons)
 	minimal_player_age = 21
+	exp_requirements = 300
+	exp_type = EXP_TYPE_CREW
 
 	equip(var/mob/living/carbon/human/H)
 		if(!H)	return 0
@@ -74,10 +78,10 @@
 		H.equip_or_collect(new /obj/item/clothing/glasses/hud/security/sunglasses(H), slot_glasses)
 //		H.equip_or_collect(new /obj/item/clothing/mask/gas(H), slot_wear_mask) //Grab one from the armory you donk
 		H.equip_or_collect(new /obj/item/device/flash(H), slot_l_store)
-		H.equip_or_collect(new /obj/item/weapon/gun/projectile/shotgun/riot(H), slot_s_store)
+		H.equip_or_collect(new /obj/item/weapon/gun/projectile/automatic/pistol/enforcer45(H), slot_s_store)
 		H.equip_or_collect(new /obj/item/weapon/storage/box/survival(H), slot_in_backpack)
 		H.equip_or_collect(new /obj/item/weapon/restraints/handcuffs(H), slot_in_backpack)
-		H.equip_or_collect(new /obj/item/ammo_box/shotgun/beanbag(H), slot_in_backpack)
+		H.equip_or_collect(new /obj/item/ammo_box/magazine/m45/enforcer45(H), slot_in_backpack)
 		var/obj/item/weapon/implant/loyalty/L = new/obj/item/weapon/implant/loyalty(H)
 		L.imp_in = H
 		L.implanted = 1
@@ -86,18 +90,22 @@
 
 
 
-/datum/job/investigator
+/datum/job/detective
 	title = "Detective"
-	flag = INVESTIGATOR
+	flag = DETECTIVE
 	department_flag = ENGSEC
 	total_positions = 1
 	spawn_positions = 1
 	supervisors = "the head of security"
 	selection_color = "#ffeeee"
+	alt_titles = list("Forensic Technician")
 	idtype = /obj/item/weapon/card/id/security
 	access = list(access_security, access_sec_doors, access_forensics_lockers, access_morgue, access_maint_tunnels, access_court, access_weapons)
 	minimal_access = list(access_sec_doors, access_forensics_lockers, access_morgue, access_maint_tunnels, access_court, access_weapons)
+	alt_titles = list("Forensic Technician")
 	minimal_player_age = 14
+	exp_requirements = 300
+	exp_type = EXP_TYPE_CREW
 	equip(var/mob/living/carbon/human/H)
 		if(!H)	return 0
 		H.equip_or_collect(new /obj/item/device/radio/headset/headset_sec/alt(H), slot_l_ear)
@@ -148,6 +156,8 @@
 	access = list(access_security, access_sec_doors, access_brig, access_court, access_maint_tunnels, access_morgue, access_weapons)
 	minimal_access = list(access_security, access_sec_doors, access_brig, access_court, access_maint_tunnels, access_weapons)
 	minimal_player_age = 14
+	exp_requirements = 300
+	exp_type = EXP_TYPE_CREW
 	equip(var/mob/living/carbon/human/H)
 		if(!H)	return 0
 		H.equip_or_collect(new /obj/item/device/radio/headset/headset_sec/alt(H), slot_l_ear)
@@ -161,11 +171,11 @@
 		H.equip_to_slot_or_del(new /obj/item/clothing/head/helmet(H), slot_head)
 		H.equip_or_collect(new /obj/item/device/pda/security(H), slot_wear_pda)
 		H.equip_or_collect(new /obj/item/clothing/gloves/color/black(H), slot_gloves)
-		H.equip_or_collect(new /obj/item/weapon/gun/projectile/shotgun/riot(H), slot_s_store)
+		H.equip_or_collect(new /obj/item/weapon/gun/projectile/automatic/pistol/enforcer45(H), slot_s_store)
 		H.equip_or_collect(new /obj/item/device/flash(H), slot_l_store)
 		H.equip_or_collect(new /obj/item/weapon/storage/box/survival(H), slot_in_backpack)
 		H.equip_or_collect(new /obj/item/weapon/restraints/handcuffs(H), slot_in_backpack)
-		H.equip_or_collect(new /obj/item/ammo_box/shotgun/beanbag(H), slot_in_backpack)
+		H.equip_or_collect(new /obj/item/ammo_box/magazine/m45/enforcer45(H), slot_in_backpack)
 		var/obj/item/weapon/implant/loyalty/L = new/obj/item/weapon/implant/loyalty(H)
 		L.imp_in = H
 		L.implanted = 1
@@ -229,11 +239,11 @@
 		H.equip_or_collect(new /obj/item/clothing/shoes/jackboots(H), slot_shoes)
 		H.equip_or_collect(new /obj/item/device/pda/security(H), slot_wear_pda)
 		H.equip_or_collect(new /obj/item/clothing/gloves/color/black(H), slot_gloves)
-		H.equip_or_collect(new /obj/item/weapon/gun/projectile/shotgun/riot(H), slot_s_store)
+		H.equip_or_collect(new /obj/item/weapon/gun/projectile/automatic/pistol/enforcer45(H), slot_s_store)
 		H.equip_or_collect(new /obj/item/device/flash(H), slot_l_store)
 		H.equip_or_collect(new /obj/item/weapon/storage/box/engineer(H), slot_in_backpack)
 		H.equip_or_collect(new /obj/item/weapon/restraints/handcuffs(H), slot_in_backpack)
-		H.equip_or_collect(new /obj/item/ammo_box/shotgun/beanbag(H), slot_in_backpack)
+		H.equip_or_collect(new /obj/item/ammo_box/magazine/m45/enforcer45(H), slot_in_backpack)
 		var/obj/item/weapon/implant/loyalty/L = new/obj/item/weapon/implant/loyalty(H)
 		L.imp_in = H
 		L.implanted = 1

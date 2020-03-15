@@ -148,7 +148,7 @@
 		view = world.view //Reset the view
 		winset(src, "mapwindow.map", "icon-size=[src.reset_stretch]")
 		viewingCanvas = 0
-		mob.reset_view()
+		mob.reset_perspective()
 		if(mob.hud_used)
 			mob.hud_used.show_hud(HUD_STYLE_STANDARD)
 
@@ -278,6 +278,9 @@
 			step(mob, pick(cardinal))
 		else
 			. = ..()
+		//this is so retarded, I'm so sorry. The only purpose of the proc here is to update one's animation if they change their dir while crawling
+		if(mob.lying)
+			mob.update_canmove(force_lying_update = 1)
 
 		for(var/obj/item/weapon/grab/G in mob)
 			if(G.state == GRAB_NECK)

@@ -67,8 +67,8 @@
 
 		if(ishuman(A))
 			var/mob/living/carbon/human/M = A
-			if(M.lying)
-				return 1
+			// if(M.lying)
+			// 	return 1
 
 			if(M.flying)
 				return ..()
@@ -89,10 +89,10 @@
 					M.track_blood--
 
 			if(bloodDNA)
-				src.AddTracks(/obj/effect/decal/cleanable/blood/tracks/footprints,bloodDNA,M.dir,0,bloodcolor) // Coming
+				src.AddTracks(M.get_footprint(),bloodDNA,M.dir,0,bloodcolor) // Coming
 				var/turf/simulated/from = get_step(M,reverse_direction(M.dir))
 				if(istype(from) && from)
-					from.AddTracks(/obj/effect/decal/cleanable/blood/tracks/footprints,bloodDNA,0,M.dir,bloodcolor) // Going
+					from.AddTracks(M.get_footprint(),bloodDNA,0,M.dir,bloodcolor) // Going
 
 				bloodDNA = null
 
@@ -120,10 +120,11 @@
 		return 0
 	var/obj/effect/decal/cleanable/blood/B = locate() in contents	//check for existing blood splatter
 	if(!B)
-		blood_splatter(src,M.get_blood(M.vessel),1)
-		B = locate(/obj/effect/decal/cleanable/blood) in contents
-	B.add_blood_list(M)
-	return 1 //we bloodied the floor
+		B = blood_splatter(src,M.get_blood(M.vessel),1)
+	if(B)
+		B.add_blood_list(M)
+		return 1 //we bloodied the floor
+	return 0 // Clean floors club
 
 // Only adds blood on the floor -- Skie
 /turf/simulated/add_blood_floor(mob/living/carbon/M as mob)

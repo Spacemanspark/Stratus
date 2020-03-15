@@ -1,8 +1,5 @@
 //This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:32
 
-#define TINT_IMPAIR 2			//Threshold of tint level to apply weld mask overlay
-#define TINT_BLIND 3			//Threshold of tint level to obscure vision fully
-
 /mob/living/carbon/human
 
 	var/pressure_alert = 0
@@ -12,11 +9,9 @@
 	var/exposedtimenow = 0
 	var/firstexposed = 0
 	var/heartbeat = 0
-	var/tinttotal = 0				// Total level of visually impairing items
 
 /mob/living/carbon/human/Life()
 	fire_alert = 0 //Reset this here, because both breathe() and handle_environment() have a chance to set it.
-	tinttotal = tintcheck() //here as both hud updates and status updates call it
 	life_tick++
 
 	in_stasis = 0
@@ -80,7 +75,7 @@
 /mob/living/carbon/human/handle_disabilities()
 	if(disabilities & EPILEPSY)
 		if((prob(1) && paralysis < 1))
-			visible_message("<span class='danger'><b>[src]</b> starts having a seizure!</span>","<span class='alert'>You have a seizure!</span>")
+			visible_message("<span class='danger'>[src] starts having a seizure!</span>","<span class='alert'>You have a seizure!</span>")
 			Paralyse(10)
 			Jitter(1000)
 
@@ -899,7 +894,7 @@
 
 /mob/living/carbon/human/handle_vision()
 	if(machine)
-		if(!machine.check_eye(src))		reset_view(null)
+		if(!machine.check_eye(src))		reset_perspective(null)
 	else
 		var/isRemoteObserve = 0
 		if((REMOTE_VIEW in mutations) && remoteview_target)
@@ -924,7 +919,7 @@
 
 		if(!isRemoteObserve && client && !client.adminobs)
 			remoteview_target = null
-			reset_view(null)
+			reset_perspective(null)
 
 	species.handle_vision(src)
 
@@ -939,8 +934,8 @@
 			if(lastpuke >= 25) // about 25 second delay I guess
 				Stun(5)
 
-				visible_message("<span class='danger'><b>[src]</b> throws up!</span>", \
-						"<span class='userdanger'><b>[src]</b> throws up!</span>")
+				visible_message("<span class='danger'>[src] throws up!</span>", \
+						"<span class='userdanger'>[src] throws up!</span>")
 				playsound(loc, 'sound/effects/splat.ogg', 50, 1)
 
 				var/turf/location = loc
@@ -984,12 +979,14 @@
 		shock_stage += 1
 	else
 		if(prob(shock_prob))//leaving injuries beyond 50% health untreated will slowly build up shock. Bad.
-			shock_stage += 2
-		shock_stage = max(shock_stage-1, 0)
+			shock_stage += 1.5
+		shock_stage = max(shock_stage-2, 0)//arbitrary numbers ftw
 
-	if(shock_stage < traumatic_shock)//bump it up by 10 if it's lower than trauma. At 150 it grows much slower, allowing for some top tier medical action.
-		shock_stage = min(traumatic_shock, 150, shock_stage + 10)
+	if(shock_stage < traumatic_shock)//bump it up by 5 if it's lower than trauma. At 150 it grows much slower, allowing for some top tier medical action.
+		shock_stage = min(150, traumatic_shock, shock_stage + 5)
 
+
+// effects of shock
 	if(shock_stage >= 200)
 		heart_attack = 1//heart attack from severe shock. This is bad for you.
 		to_chat(src, pick("<font color='red'><b>Your heart feels like it...stopped.", "<font color='red'><b>Your can feel your heart stop beating.", "<font color='red'><b>It feels like your heart isn't there anymore."))
@@ -1007,33 +1004,30 @@
 			if(prob(5))
 				visible_message(pick("<b>[src]</b> passes out.", "<b>[src]</b> loses consciousness."), "<font color='red'><b>"+pick("You can barely feel your consciousness fade...", "Everything turns black as you lose consciousness from the unbearable pain.", "The pain makes you pass out."))
 				Paralyse(20)
-			return
 
-		if(80 to 150)
+		if(100 to 150)
 			if(prob(5))
 				if(!weakened && !resting && !paralysis)
 					visible_message(pick("<b>[src]</b> stumbles to the ground.", "<b>[src]</b> falls to the ground."), "<font color='red'><b>"+pick("The pain is excrutiating!", "Please, just end the pain!", "Your whole body is going numb!"))
 				Weaken(20)
-			return
 
-		if(60 to 80)
+		if(80 to 100)
 			if(prob(2))
 				if(!weakened && !resting && !paralysis)
 					visible_message(pick("<b>[src]</b> stumbles to the ground.", "<b>[src]</b> falls to the ground."), "<font color='red'><b>"+pick("The pain is excrutiating!", "Please, just end the pain!", "Your whole body is going numb!"))
 				Weaken(5)
-			return
 
-		if(40 to 60)
-			if(prob(5))
+		if(50 to 80)
+			if(prob(2))
 				to_chat(src, "<font color='red'><b>"+pick("The pain is excrutiating!", "Please, just end the pain!", "Your whole body is going numb!"))
 
-		if(20 to 40)
-			if(prob(5))
+		if(30 to 50)
+			if(prob(2))
 				to_chat(src, "<font color='red'><b>"+pick("It hurts so much!", "You really need some painkillers..", "Dear God, the pain!"))
 
-		if(1 to 20)
-			if(prob(5))
-				to_chat(src, "<font color='red'><b>"+pick("It hurts...", "You'd really use some painkillers right now...", "Something is starting to really hurt."))
+		if(20 to 30)
+			if(prob(1))
+				to_chat(src, "<font color='red'><b>"+pick("It hurts...", "You'd really use some painkillers right now...", "Something is starting to hurt..."))
 
 /mob/living/carbon/human/proc/handle_pulse()
 
